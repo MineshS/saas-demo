@@ -13,3 +13,11 @@
 .DS_Store
 .vercel
 .env*.local
+cert.pem
+cert.pfx
+key.pem
+server.key
+node_modules
+
+# Local Netlify folder
+.netlify
