@@ -26,7 +26,7 @@ async function handler(req: NextRequest) : Promise<NextResponse<SiteSearchRespon
         locale: contentLocales?.length > 0 ? contentLocales as GraphQL.Locales[] : null,
         types: contentTypes?.length > 0 ? contentTypes : null
     })
-    const resultItems : ContentSearchResultItems = (rawResponse.Content?.items ?? []).filter(Utils.isNotNullOrUndefined).map(item => {
+    const resultItems : ContentSearchResultItems = (rawResponse._Content?.items ?? []).filter(Utils.isNotNullOrUndefined).map(item => {
         const iContent = useFragment(GraphQL.IContentDataFragmentDoc, item)
         const metaData = useFragment(GraphQL.IContentInfoFragmentDoc, iContent._metadata)
         const linkData = useFragment(GraphQL.LinkDataFragmentDoc, metaData?.url)
@@ -44,7 +44,7 @@ async function handler(req: NextRequest) : Promise<NextResponse<SiteSearchRespon
     const resultFacets : ContentSearchResultFacets = []
 
     // Process content type facets
-    const contentTypeFacetInfo = (rawResponse.Content?.facets?._metadata?.types ?? []).filter(Utils.isNotNullOrUndefined)
+    const contentTypeFacetInfo = (rawResponse._Content?.facets?._metadata?.types ?? []).filter(Utils.isNotNullOrUndefined)
     resultFacets.push({
         field: "types",
         options: contentTypeFacetInfo.filter(x => x.name != "Content" && x.name != "Page").map(x => {
@@ -56,7 +56,7 @@ async function handler(req: NextRequest) : Promise<NextResponse<SiteSearchRespon
     })
 
     // Process content language facets
-    const languageFacetInfo = (rawResponse.Content?.facets?._metadata?.locale ?? []).filter(Utils.isNotNullOrUndefined)
+    const languageFacetInfo = (rawResponse._Content?.facets?._metadata?.locale ?? []).filter(Utils.isNotNullOrUndefined)
     resultFacets.push({
         field: "locales",
         options: languageFacetInfo.map(x => {
@@ -67,7 +67,7 @@ async function handler(req: NextRequest) : Promise<NextResponse<SiteSearchRespon
         })
     })
     
-    const resultCount = rawResponse.Content?.total
+    const resultCount = rawResponse._Content?.total
 
     const searchResults : SiteSearchResponse = {
         query: searchTerm,
